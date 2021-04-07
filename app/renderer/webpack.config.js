@@ -2,6 +2,9 @@ const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+
+const isDevelopment = process.env.NODE_ENV === "development";
 
 /**
  * @type {webpack.Configuration}
@@ -13,8 +16,7 @@ const config = {
     filename: "bundle.js",
   },
   target: "electron-renderer",
-  devtool:
-    process.env.NODE_ENV === "development" ? "eval-source-map" : "source-map",
+  devtool: isDevelopment ? "eval-source-map" : "source-map",
   performance: false,
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
@@ -29,12 +31,15 @@ const config = {
           options: {
             babelrc: false,
             presets: ["@babel/preset-typescript", "@babel/preset-react"],
+            plugins: [isDevelopment && "react-refresh/babel"].filter(Boolean),
           },
         },
       },
     ],
   },
   plugins: [
+    isDevelopment && new webpack.HotModuleReplacementPlugin(),
+    isDevelopment && new ReactRefreshWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin({
       typescript: { configFile: path.join(__dirname, "tsconfig.json") },
     }),
@@ -42,7 +47,7 @@ const config = {
       template: path.join(__dirname, "public", "index.html"),
       favicon: path.join(__dirname, "public", "favicon.ico"),
     }),
-  ],
+  ].filter(Boolean),
   devServer: {
     historyApiFallback: true,
     port: 8080,
