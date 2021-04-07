@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  electron-builder:
+    build: .
+    volumes:
+      - ./dist:/project/dist

@@ -1,0 +1,10 @@
+files: "./build/**/*"
+appId: "com.electron-react-typescript-starter-app"
+linux:
+  category: Utility
+  target: AppImage
+mac:
+  category: public.app-category.utilities
+  target: mas
+win:
+  target: nsis
