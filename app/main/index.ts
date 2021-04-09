@@ -6,7 +6,7 @@ const WINDOW_INITIAL_HEIGHT = 720;
 
 let mainWindow: BrowserWindow | null = null;
 
-app.on("ready", () => {
+const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: WINDOW_INITIAL_WIDTH,
     height: WINDOW_INITIAL_HEIGHT,
@@ -14,6 +14,7 @@ app.on("ready", () => {
       nodeIntegration: true,
       contextIsolation: false,
     },
+    show: false,
   });
 
   const url =
@@ -26,8 +27,26 @@ app.on("ready", () => {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
+
+  mainWindow.once("ready-to-show", () => {
+    if (mainWindow) {
+      mainWindow.show();
+    }
+  });
+};
+
+app.on("ready", () => {
+  createWindow();
 });
 
-app.on("window-all-closed", () => {});
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
 
-app.on("activate", () => {});
+app.on("activate", () => {
+  if (mainWindow === null) {
+    createWindow();
+  }
+});
