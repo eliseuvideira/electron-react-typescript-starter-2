@@ -1,6 +1,9 @@
 const webpack = require("webpack");
 const path = require("path");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const dotenv = require("dotenv-safe");
+
+const { required } = dotenv.config();
 
 /**
  * @type {webpack.Configuration}
@@ -39,6 +42,7 @@ const config = {
     new ForkTsCheckerWebpackPlugin({
       typescript: { configFile: path.join(__dirname, "tsconfig.json") },
     }),
+    new webpack.EnvironmentPlugin(required),
   ],
 };
 

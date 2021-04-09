@@ -3,6 +3,9 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const dotenv = require("dotenv-safe");
+
+const { required } = dotenv.config();
 
 const isDevelopment = process.env.NODE_ENV === "development";
 
@@ -47,6 +50,7 @@ const config = {
       template: path.join(__dirname, "public", "index.html"),
       favicon: path.join(__dirname, "public", "favicon.ico"),
     }),
+    new webpack.EnvironmentPlugin(required),
   ].filter(Boolean),
   devServer: {
     historyApiFallback: true,
