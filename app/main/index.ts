@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import path from "path";
+import { createHighlightMenu, createMenu } from "./functions/menu";
 
 const WINDOW_INITIAL_WIDTH = 1080;
 const WINDOW_INITIAL_HEIGHT = 720;
@@ -32,6 +33,13 @@ const createWindow = () => {
     if (mainWindow) {
       mainWindow.show();
     }
+  });
+
+  mainWindow.webContents.on("context-menu", (_, props) => {
+    const contextMenu = props.selectionText
+      ? createHighlightMenu(mainWindow, props)
+      : createMenu(mainWindow, props);
+    contextMenu.popup();
   });
 };
 
